@@ -176,8 +176,8 @@ void loop() {
 // ------- Complimentary filter from accelerometer and gyroscope data ---------//
 // Complimentary filter uses a mix of two sensor data with 
 //a specific ratio which depend on which one you trust better
-  theta_compli = 0.95*(theta_gyro) + 0.05*(theta_acc);
-  phi_compli = 0.95*(phi_gyro) + 0.05*(phi_acc);
+  theta_compli = 0.95*(theta_compli - gY * dt) + 0.05*(theta_acc);
+  phi_compli = 0.95*(phi_compli + gX * dt) + 0.05*(phi_acc);
 // ------- end of Complimentary filter from accelerometer and gyroscope data -----//
 
 //********** Get data from magnetometer *****************//
