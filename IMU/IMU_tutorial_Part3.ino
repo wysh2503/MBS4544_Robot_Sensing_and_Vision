@@ -2,18 +2,17 @@
  * Reading raw data from MPU9250 IMU sensor via I2C
  * Convert raw data into Roll, Pitch, Yaw angles
  * created by: Winston Yeung
- * revision date: 08 Oct 2022
+ * revision date: 16 Oct 2022
  */
 
 #include "Wire.h"
-//#include "math.h"
 
-const int IMU_ADDR = 0x68; //ADO=5V -> 0x69
+const int IMU_ADDR = 0x68; // I2C address for IMU. ADO=5V -> 0x69
 const int MAG_ADDR = 0x0C; //Magnetometer (AK8963) address
 
 // Declare variables.
 // NOTE: theta = pitch, phi = roll, psi = yaw
-int16_t accel_X, accel_Y, accel_Z, temp_raw, gyro_X, gyro_Y, gyro_Z;
+int16_t accel_X, accel_Y, accel_Z, temp_raw, gyro_X, gyro_Y, gyro_Z; // variables for raw sensor data
 double aX, aY, aZ, theta_acc, phi_acc; //accel values and theta and phi calculated from accelerometer
 double theta_acc_previous = 0, theta_acc_LP, phi_acc_previous = 0, phi_acc_LP;
 double gX, gY, gZ, theta_gyro=0, phi_gyro=0, psi_gyro;
@@ -25,7 +24,9 @@ double dt;
 int8_t Device_ID; // device ID for magnetometer
 uint8_t mag_XL, mag_XH, mag_YL, mag_YH, mag_ZL, mag_ZH; //0x03 (HXL), 0x04 (HXH),0x05 (HYL), 0x06 (HYH),0x07 (HZL), 0x08 (HZH)
 int16_t mag_X, mag_Y, mag_Z;
+double mX, mY; // compensated magnetometer X and Y
 int8_t Msens_X,Msens_Y, Msens_Z;
+float d2r; // degree to radian
 
 int8_t control_1; //0x0A (CNTL)
 int8_t status_1; //0x02 (ST1)
@@ -231,7 +232,15 @@ void loop() {
 //      Serial.print("  | mY = "); Serial.print(mag_Y*asaY*0.15); Serial.print(" [uT]"); // [uT] is a unit in microTesla to measure magnetic field
 //      Serial.print("  | mZ = "); Serial.print(mag_Z*asaZ*0.15); Serial.println(" [uT]");
       
-      psi = atan2(mag_Y,mag_X)*(180/PI); // Yaw angle in degree from magnetometer data
+     // psi = atan2(mag_Y,mag_X)*(180/PI); // Yaw angle in degree from magnetometer data
+      
+// For real situation, yaw angle must be compensated when the IMU is tilting in some angles while rotating
+      d2r = PI/180.0; // degree to radian conversion
+      mY = mag_Y*cos(theta_compli*d2r) - mag_X*sin(phi_compli*d2r)*sin(theta_compli*d2r) + mag_Z*cos(phi_compli*d2r)*sin(theta_compli*d2r);
+      mX = mag_X*cos(phi_compli*d2r) + mag_Z*sin(phi_compli*d2r);
+      psi = atan2(mY, mX)*(180./PI);
+//
+      
 //      Serial.println(Yaw); 
     }
   }    
