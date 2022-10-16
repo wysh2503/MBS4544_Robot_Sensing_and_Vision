@@ -1,6 +1,6 @@
 /* Controlling ESP32 Mecanum Wheel car by PS4 Controller
  * created by: Winston Yeung
- * revision date: 10 Oct 2022
+ * revision date: 16 Oct 2022
 */
 
 #include <PS4Controller.h>
@@ -40,7 +40,7 @@ int BackRightMotorPin1=16;
 int BackRightMotorPin2=17;
 //FRONT LEFT MOTOR
 int enableFrontLeftMotor = 32;
-int FrontLeftMotorPin1 = 35;
+int FrontLeftMotorPin1 = 33;
 int FrontLeftMotorPin2 = 25;
 //BACK LEFT MOTOR
 int enableBackLeftMotor = 23;
