@@ -236,8 +236,8 @@ void loop() {
       
 // For real situation, yaw angle must be compensated when the IMU is tilting in some angles while rotating
       d2r = PI/180.0; // degree to radian conversion
-      mY = mag_Y*cos(theta_compli*d2r) - mag_X*sin(phi_compli*d2r)*sin(theta_compli*d2r) + mag_Z*cos(phi_compli*d2r)*sin(theta_compli*d2r);
-      mX = mag_X*cos(phi_compli*d2r) + mag_Z*sin(phi_compli*d2r);
+      mX = mag_Y*cos(theta_compli*d2r) - mag_X*sin(phi_compli*d2r)*sin(theta_compli*d2r) + mag_Z*cos(phi_compli*d2r)*sin(theta_compli*d2r);
+      mY = mag_X*cos(phi_compli*d2r) + mag_Z*sin(phi_compli*d2r);
       psi = atan2(mY, mX)*(180./PI);
 //
       
