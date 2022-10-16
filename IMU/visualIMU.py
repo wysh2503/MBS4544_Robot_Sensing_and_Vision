@@ -41,18 +41,21 @@ while (True):
         dataPacket = arduinoData.readline()
         dataPacket = str(dataPacket, 'utf-8')
         splitPacket = dataPacket.split(",")
-        pitch = float(splitPacket[7])*2*np.pi/360. # change received data starting value [i]
-        roll = float(splitPacket[8])*2*np.pi/360.
-        yaw = -float(splitPacket[9])*2*np.pi/360.
-        print("Roll=", roll / (2*np.pi/360.), " Pitch=", pitch / (2*np.pi/360.),
-              "Yaw=", yaw / (2*np.pi/360.))
+        pitch_rad = float(splitPacket[7])*2*np.pi/360  # change received data starting value [i]
+        roll_rad = float(splitPacket[8])*2*np.pi/360
+        yaw_rad = float(splitPacket[9]) * 2*np.pi/360 + np.pi
+        
+        pitch_deg = pitch_rad / (2*np.pi/360)
+        roll_deg = roll_rad / (2*np.pi/360)
+        yaw_deg = yaw_rad / (2*np.pi/360)
+        print("Roll=", roll_deg, " Pitch=", pitch_deg, "Yaw=",yaw_deg)
 
         rate(50)
-        k = vector(cos(yaw)*cos(pitch), sin(pitch),sin(yaw)*cos(pitch))
+        k = vector(cos(yaw_rad)*cos(pitch_rad), sin(pitch_rad),sin(yaw_rad)*cos(pitch_rad))
         y = vector(0, 1, 0)
         s = cross(k, y)
         v = cross(s, k)
-        vrot = v*cos(roll)+cross(k, v)*sin(roll)
+        vrot = v*cos(roll_rad)+cross(k, v)*sin(roll_rad)
 
         frontArrow.axis = k
         sideArrow.axis = cross(k, vrot)
@@ -62,5 +65,9 @@ while (True):
         sideArrow.length = 3
         frontArrow.length = 4
         upArrow.length = 3
+        
+        label(pos=vec(0, 4, 0), color=color.blue,
+              text='<b>Roll:<b> {:7.2f} <b> Pitch:<b> {:7.2f} <b> Yaw:<b> {:7.2f} <b>'.format(
+                  roll_deg,pitch_deg,yaw_deg), height=50, font='sans')
     except:
         pass
