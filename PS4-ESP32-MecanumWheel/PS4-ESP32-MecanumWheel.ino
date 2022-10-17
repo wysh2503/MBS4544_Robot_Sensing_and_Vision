@@ -49,7 +49,10 @@ int BackLeftMotorPin2 = 19;
 
 const int PWMFreq = 1000; /* 1 KHz */
 const int PWMResolution = 8; // 8-bit
-const int PWMSpeedChannel = 4; // 0-15
+const int PWMSpeedChannel_1 = 1; // 0-15
+const int PWMSpeedChannel_2 = 2; // 0-15
+const int PWMSpeedChannel_3 = 3; // 0-15
+const int PWMSpeedChannel_4 = 4; // 0-15
 
 
 void notify()
@@ -242,7 +245,22 @@ void rotateMotor(int motorNumber, int motorSpeed)
     digitalWrite(BackLeftMotorPin1,LOW);
     digitalWrite(BackLeftMotorPin2,LOW);   
   }
-  ledcWrite(PWMSpeedChannel, abs(motorSpeed));
+  if (motorNumber = 0)
+  {
+    ledcWrite(PWMSpeedChannel_1, abs(motorSpeed));
+  }
+  else if (motorNumber = 1)
+  {
+    ledcWrite(PWMSpeedChannel_2, abs(motorSpeed));
+  }
+  else if (motorNumber = 2)
+  {
+    ledcWrite(PWMSpeedChannel_3, abs(motorSpeed));
+  }
+  else if (motorNumber = 3)
+  {
+    ledcWrite(PWMSpeedChannel_4, abs(motorSpeed));
+  }
 }
 
 void setUpPinModes()
@@ -264,12 +282,15 @@ void setUpPinModes()
   pinMode(BackLeftMotorPin2,OUTPUT);
 
   //Set up PWM for motor speed
-  ledcSetup(PWMSpeedChannel, PWMFreq, PWMResolution);
-  ledcAttachPin(enableFrontRightMotor, PWMSpeedChannel);
-  ledcAttachPin(enableFrontLeftMotor, PWMSpeedChannel); 
-  ledcAttachPin(enableBackLeftMotor, PWMSpeedChannel);
-  ledcAttachPin(enableBackLeftMotor, PWMSpeedChannel);
-  
+  ledcSetup(PWMSpeedChannel_1, PWMFreq, PWMResolution);
+  ledcSetup(PWMSpeedChannel_2, PWMFreq, PWMResolution);
+  ledcSetup(PWMSpeedChannel_3, PWMFreq, PWMResolution);
+  ledcSetup(PWMSpeedChannel_4, PWMFreq, PWMResolution);
+  ledcAttachPin(enableBackRightMotor, PWMSpeedChannel_1);
+  ledcAttachPin(enableBackLeftMotor, PWMSpeedChannel_2);
+  ledcAttachPin(enableFrontRightMotor, PWMSpeedChannel_3);
+  ledcAttachPin(enableFrontLeftMotor, PWMSpeedChannel_4); 
+    
   rotateMotor(BACK_RIGHT_MOTOR, 0);
   rotateMotor(BACK_LEFT_MOTOR, 0);
   rotateMotor(FRONT_RIGHT_MOTOR, 0);
