@@ -190,22 +190,22 @@ void rotateMotor(int motorNumber, int motorSpeed)
 {
   if (motorSpeed < 0)
   {
-    if (motorNumber = 0)
+    if (motorNumber = BACK_RIGHT_MOTOR)
     {
     digitalWrite(BackRightMotorPin1,LOW);
     digitalWrite(BackRightMotorPin2,HIGH);  
     }
-    else if (motorNumber = 1)  
+    else if (motorNumber = BACK_LEFT_MOTOR)  
     { 
     digitalWrite(BackLeftMotorPin1,LOW);
     digitalWrite(BackLeftMotorPin2,HIGH);
     }
-    else if (motorNumber = 2)
+    else if (motorNumber = FRONT_RIGHT_MOTOR)
     {
     digitalWrite(FrontRightMotorPin1,LOW);
     digitalWrite(FrontRightMotorPin2,HIGH);  
     }
-    else if (motorNumber = 3)  
+    else if (motorNumber = FRONT_LEFT_MOTOR)  
     { 
     digitalWrite(FrontLeftMotorPin1,LOW);
     digitalWrite(FrontLeftMotorPin2,HIGH);
@@ -213,22 +213,22 @@ void rotateMotor(int motorNumber, int motorSpeed)
   }
   else if (motorSpeed > 0)
   {
-    if (motorNumber = 0)
+    if (motorNumber = BACK_RIGHT_MOTOR)
     {
     digitalWrite(BackRightMotorPin1,HIGH);
     digitalWrite(BackRightMotorPin2,LOW);
     }
-    else if (motorNumber = 1)
+    else if (motorNumber = BACK_LEFT_MOTOR)
     {
     digitalWrite(BackLeftMotorPin1,HIGH);
     digitalWrite(BackLeftMotorPin2,LOW);
     }
-    else if (motorNumber = 2)
+    else if (motorNumber = FRONT_RIGHT_MOTOR)
     {
     digitalWrite(FrontRightMotorPin1,HIGH);
     digitalWrite(FrontRightMotorPin2,LOW);  
     }
-    else if (motorNumber = 3)  
+    else if (motorNumber = FRONT_LEFT_MOTOR)  
     { 
     digitalWrite(FrontLeftMotorPin1,HIGH);
     digitalWrite(FrontLeftMotorPin2,LOW);
@@ -245,19 +245,19 @@ void rotateMotor(int motorNumber, int motorSpeed)
     digitalWrite(BackLeftMotorPin1,LOW);
     digitalWrite(BackLeftMotorPin2,LOW);   
   }
-  if (motorNumber = 0)
+  if (motorNumber = BACK_RIGHT_MOTOR)
   {
     ledcWrite(PWMSpeedChannel_1, abs(motorSpeed));
   }
-  else if (motorNumber = 1)
+  else if (motorNumber = BACK_LEFT_MOTOR)
   {
     ledcWrite(PWMSpeedChannel_2, abs(motorSpeed));
   }
-  else if (motorNumber = 2)
+  else if (motorNumber = FRONT_RIGHT_MOTOR)
   {
     ledcWrite(PWMSpeedChannel_3, abs(motorSpeed));
   }
-  else if (motorNumber = 3)
+  else if (motorNumber = FRONT_LEFT_MOTOR)
   {
     ledcWrite(PWMSpeedChannel_4, abs(motorSpeed));
   }
