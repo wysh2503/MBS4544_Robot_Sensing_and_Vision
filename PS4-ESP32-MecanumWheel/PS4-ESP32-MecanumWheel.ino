@@ -242,7 +242,7 @@ void setUpPinModes()
   ledcSetup(PWMSpeedChannel, PWMFreq, PWMResolution);
   ledcAttachPin(enableFrontRightMotor, PWMSpeedChannel);
   ledcAttachPin(enableFrontLeftMotor, PWMSpeedChannel); 
-  ledcAttachPin(enableBackLeftMotor, PWMSpeedChannel);
+  ledcAttachPin(enableBackRightMotor, PWMSpeedChannel);
   ledcAttachPin(enableBackLeftMotor, PWMSpeedChannel);
   ledcWrite(PWMSpeedChannel, MAX_MOTOR_SPEED);
 
