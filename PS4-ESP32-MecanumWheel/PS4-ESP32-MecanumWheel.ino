@@ -1,6 +1,6 @@
 /* Controlling ESP32 Mecanum Wheel car by PS4 Controller
  * created by: Winston Yeung
- * revision date: 16 Oct 2022
+ * revision date: 17 Oct 2022
 */
 
 #include <PS4Controller.h>
@@ -54,9 +54,9 @@ const int PWMSpeedChannel = 4; // 0-15
 
 void notify()
 {
-  int LStickY = map( PS4.LStickY(), -127, 127, -254, 254);
-  int LStickX = map( PS4.LStickX(), -127, 127, -254, 254);
-  int RStickX = map( PS4.RStickX(), -127, 127, -254, 254);
+  int LStickY = map( PS4.LStickY(), -128, 127, -254, 254);
+  int LStickX = map( PS4.LStickX(), -128, 127, -254, 254);
+  int RStickX = map( PS4.RStickX(), -128, 127, -254, 254);
 
   if (LStickY > 50 && LStickX < -50) {moveCar(FORWARD_LEFT);}
   else if (LStickY > 50 && LStickX > 50) {moveCar(FORWARD_RIGHT);}
@@ -187,25 +187,49 @@ void rotateMotor(int motorNumber, int motorSpeed)
 {
   if (motorSpeed < 0)
   {
-    digitalWrite(FrontRightMotorPin1,LOW);
-    digitalWrite(FrontRightMotorPin2,HIGH);
-    digitalWrite(FrontLeftMotorPin1,LOW);
-    digitalWrite(FrontLeftMotorPin2,HIGH);
+    if (motorNumber = 0)
+    {
     digitalWrite(BackRightMotorPin1,LOW);
-    digitalWrite(BackRightMotorPin2,HIGH);     
+    digitalWrite(BackRightMotorPin2,HIGH);  
+    }
+    else if (motorNumber = 1)  
+    { 
     digitalWrite(BackLeftMotorPin1,LOW);
     digitalWrite(BackLeftMotorPin2,HIGH);
+    }
+    else if (motorNumber = 2)
+    {
+    digitalWrite(FrontRightMotorPin1,LOW);
+    digitalWrite(FrontRightMotorPin2,HIGH);  
+    }
+    else if (motorNumber = 3)  
+    { 
+    digitalWrite(FrontLeftMotorPin1,LOW);
+    digitalWrite(FrontLeftMotorPin2,HIGH);
+    }
   }
   else if (motorSpeed > 0)
   {
-    digitalWrite(FrontRightMotorPin1,HIGH);
-    digitalWrite(FrontRightMotorPin2,LOW);  
-    digitalWrite(FrontLeftMotorPin1,HIGH);
-    digitalWrite(FrontLeftMotorPin2,LOW);
+    if (motorNumber = 0)
+    {
     digitalWrite(BackRightMotorPin1,HIGH);
-    digitalWrite(BackRightMotorPin2,LOW);     
+    digitalWrite(BackRightMotorPin2,LOW);
+    }
+    else if (motorNumber = 1)
+    {
     digitalWrite(BackLeftMotorPin1,HIGH);
     digitalWrite(BackLeftMotorPin2,LOW);
+    }
+    else if (motorNumber = 2)
+    {
+    digitalWrite(FrontRightMotorPin1,HIGH);
+    digitalWrite(FrontRightMotorPin2,LOW);  
+    }
+    else if (motorNumber = 3)  
+    { 
+    digitalWrite(FrontLeftMotorPin1,HIGH);
+    digitalWrite(FrontLeftMotorPin2,LOW);
+    }
   }
   else
   {
@@ -218,6 +242,7 @@ void rotateMotor(int motorNumber, int motorSpeed)
     digitalWrite(BackLeftMotorPin1,LOW);
     digitalWrite(BackLeftMotorPin2,LOW);   
   }
+  ledcWrite(PWMSpeedChannel, abs(motorSpeed));
 }
 
 void setUpPinModes()
@@ -242,11 +267,13 @@ void setUpPinModes()
   ledcSetup(PWMSpeedChannel, PWMFreq, PWMResolution);
   ledcAttachPin(enableFrontRightMotor, PWMSpeedChannel);
   ledcAttachPin(enableFrontLeftMotor, PWMSpeedChannel); 
-  ledcAttachPin(enableBackRightMotor, PWMSpeedChannel);
   ledcAttachPin(enableBackLeftMotor, PWMSpeedChannel);
-  ledcWrite(PWMSpeedChannel, MAX_MOTOR_SPEED);
-
-  rotateMotor(0, 0);
+  ledcAttachPin(enableBackLeftMotor, PWMSpeedChannel);
+  
+  rotateMotor(BACK_RIGHT_MOTOR, 0);
+  rotateMotor(BACK_LEFT_MOTOR, 0);
+  rotateMotor(FRONT_RIGHT_MOTOR, 0);
+  rotateMotor(FRONT_LEFT_MOTOR, 0);
 }
 
 
