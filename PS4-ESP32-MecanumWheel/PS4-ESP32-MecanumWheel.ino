@@ -1,6 +1,6 @@
 /* Controlling ESP32 Mecanum Wheel car by PS4 Controller
  * created by: Winston Yeung
- * revision date: 17 Oct 2022
+ * revision date: 22 Oct 2022
 */
 
 #include <PS4Controller.h>
@@ -21,12 +21,12 @@
 #define ROTATE_RIGHT 10
 #define STOP 0
 
-#define BACK_RIGHT_MOTOR 0
-#define BACK_LEFT_MOTOR 1
-#define FRONT_RIGHT_MOTOR 2
-#define FRONT_LEFT_MOTOR 3
+#define BACK_RIGHT_MOTOR 1
+#define BACK_LEFT_MOTOR 2
+#define FRONT_RIGHT_MOTOR 3
+#define FRONT_LEFT_MOTOR 4
 
-#define MAX_MOTOR_SPEED 130 // about 50% duty cycle
+#define MAX_MOTOR_SPEED 120 // about 50% duty cycle
 
 unsigned long lastTimeStamp = 0;
 
@@ -61,20 +61,20 @@ void notify()
   int LStickX = map( PS4.LStickX(), -128, 127, -254, 254);
   int RStickX = map( PS4.RStickX(), -128, 127, -254, 254);
 
-  if (LStickY > 50 && LStickX < -50) {moveCar(FORWARD_LEFT);}
-  else if (LStickY > 50 && LStickX > 50) {moveCar(FORWARD_RIGHT);}
-  else if (LStickY < -50 && LStickX < -50) {moveCar(BACKWARD_LEFT);}
-  else if (LStickY < -50 && LStickX > 50) {moveCar(BACKWARD_RIGHT);}
-  else if (LStickY > 50) {moveCar(FORWARD);}
-  else if (LStickY < -50) {moveCar(BACKWARD);}
-  else if (LStickX < -50) {moveCar(LEFT);}
-  else if (LStickX > 50) {moveCar(RIGHT);}
+  if (LStickY > 30 && LStickX < -30) {moveCar(FORWARD_LEFT);}
+  else if (LStickY > 30 && LStickX > 30) {moveCar(FORWARD_RIGHT);}
+  else if (LStickY < -30 && LStickX < -30) {moveCar(BACKWARD_LEFT);}
+  else if (LStickY < -30 && LStickX > 30) {moveCar(BACKWARD_RIGHT);}
+  else if (LStickY > 90) {moveCar(FORWARD);}
+  else if (LStickY < -90) {moveCar(BACKWARD);}
+  else if (LStickX < -90) {moveCar(LEFT);}
+  else if (LStickX > 90) {moveCar(RIGHT);}
   else if (RStickX < -50) {moveCar(ROTATE_LEFT);}
   else if (RStickX > 50) {moveCar(ROTATE_RIGHT);}
   else {moveCar(STOP);}
 
 // Print data for debugging purpose only
-if (millis() - lastTimeStamp > 50)
+if (millis() - lastTimeStamp > 100)
   {
   Serial.print(LStickX);
   Serial.print(',');
@@ -93,7 +93,10 @@ void onConnect()
 
 void onDisConnect()
 {
-  rotateMotor(0, 0);
+  rotateMotor(BACK_RIGHT_MOTOR, 0);
+  rotateMotor(BACK_LEFT_MOTOR, 0);
+  rotateMotor(FRONT_RIGHT_MOTOR, 0);
+  rotateMotor(FRONT_LEFT_MOTOR, 0);
 }
 
 void moveCar(int inputValue)
@@ -130,29 +133,29 @@ void moveCar(int inputValue)
   
     case FORWARD_LEFT:
       rotateMotor(FRONT_RIGHT_MOTOR, MAX_MOTOR_SPEED);
-      rotateMotor(BACK_RIGHT_MOTOR, STOP);
-      rotateMotor(FRONT_LEFT_MOTOR, STOP);
+      // rotateMotor(BACK_RIGHT_MOTOR, STOP);
+      // rotateMotor(FRONT_LEFT_MOTOR, STOP);
       rotateMotor(BACK_LEFT_MOTOR, MAX_MOTOR_SPEED);  
       break;
   
     case FORWARD_RIGHT:
-      rotateMotor(FRONT_RIGHT_MOTOR, STOP);
+      // rotateMotor(FRONT_RIGHT_MOTOR, STOP);
       rotateMotor(BACK_RIGHT_MOTOR, MAX_MOTOR_SPEED);
       rotateMotor(FRONT_LEFT_MOTOR, MAX_MOTOR_SPEED);
-      rotateMotor(BACK_LEFT_MOTOR, STOP);  
+      // rotateMotor(BACK_LEFT_MOTOR, STOP);  
       break;
   
     case BACKWARD_LEFT:
-      rotateMotor(FRONT_RIGHT_MOTOR, STOP);
+      // rotateMotor(FRONT_RIGHT_MOTOR, STOP);
       rotateMotor(BACK_RIGHT_MOTOR, -MAX_MOTOR_SPEED);
       rotateMotor(FRONT_LEFT_MOTOR, -MAX_MOTOR_SPEED);
-      rotateMotor(BACK_LEFT_MOTOR, STOP);   
+      // rotateMotor(BACK_LEFT_MOTOR, STOP);   
       break;
   
     case BACKWARD_RIGHT:
       rotateMotor(FRONT_RIGHT_MOTOR, -MAX_MOTOR_SPEED);
-      rotateMotor(BACK_RIGHT_MOTOR, STOP);
-      rotateMotor(FRONT_LEFT_MOTOR, STOP);
+      // rotateMotor(BACK_RIGHT_MOTOR, STOP);
+      // rotateMotor(FRONT_LEFT_MOTOR, STOP);
       rotateMotor(BACK_LEFT_MOTOR, -MAX_MOTOR_SPEED);   
       break;
   
@@ -188,79 +191,72 @@ void moveCar(int inputValue)
 
 void rotateMotor(int motorNumber, int motorSpeed)
 {
-  if (motorSpeed < 0)
-  {
-    if (motorNumber = BACK_RIGHT_MOTOR)
+    if (motorSpeed < 0 && motorNumber == 1)
     {
     digitalWrite(BackRightMotorPin1,LOW);
     digitalWrite(BackRightMotorPin2,HIGH);  
     }
-    else if (motorNumber = BACK_LEFT_MOTOR)  
+    else if (motorSpeed < 0 && motorNumber == 2)  
     { 
     digitalWrite(BackLeftMotorPin1,LOW);
     digitalWrite(BackLeftMotorPin2,HIGH);
     }
-    else if (motorNumber = FRONT_RIGHT_MOTOR)
+    else if (motorSpeed < 0 && motorNumber == 3)
     {
     digitalWrite(FrontRightMotorPin1,LOW);
     digitalWrite(FrontRightMotorPin2,HIGH);  
     }
-    else if (motorNumber = FRONT_LEFT_MOTOR)  
+    else if (motorSpeed < 0 && motorNumber == 4)  
     { 
     digitalWrite(FrontLeftMotorPin1,LOW);
     digitalWrite(FrontLeftMotorPin2,HIGH);
-    }
-  }
-  else if (motorSpeed > 0)
-  {
-    if (motorNumber = BACK_RIGHT_MOTOR)
+    } 
+
+    else if (motorSpeed > 0 && motorNumber == 1)
     {
     digitalWrite(BackRightMotorPin1,HIGH);
     digitalWrite(BackRightMotorPin2,LOW);
     }
-    else if (motorNumber = BACK_LEFT_MOTOR)
+    else if (motorSpeed > 0 && motorNumber == 2)
     {
     digitalWrite(BackLeftMotorPin1,HIGH);
     digitalWrite(BackLeftMotorPin2,LOW);
     }
-    else if (motorNumber = FRONT_RIGHT_MOTOR)
+    else if (motorSpeed > 0 && motorNumber == 3)
     {
     digitalWrite(FrontRightMotorPin1,HIGH);
     digitalWrite(FrontRightMotorPin2,LOW);  
     }
-    else if (motorNumber = FRONT_LEFT_MOTOR)  
+    else if (motorSpeed > 0 && motorNumber == 4)  
     { 
     digitalWrite(FrontLeftMotorPin1,HIGH);
     digitalWrite(FrontLeftMotorPin2,LOW);
     }
-  }
-  else
-  {
+
+    else if (motorSpeed == 0 && motorNumber == 1)
+    {
     digitalWrite(FrontRightMotorPin1,LOW);
     digitalWrite(FrontRightMotorPin2,LOW);     
+    }
+    else if (motorSpeed == 0 && motorNumber == 2)
+    {
     digitalWrite(FrontLeftMotorPin1,LOW);
     digitalWrite(FrontLeftMotorPin2,LOW);
+    }
+    else if (motorSpeed == 0 && motorNumber == 3)
+    {
     digitalWrite(BackRightMotorPin1,LOW);
-    digitalWrite(BackRightMotorPin2,LOW);     
+    digitalWrite(BackRightMotorPin2,LOW);  
+    }
+    else if (motorSpeed == 0 && motorNumber == 4)
+    {   
     digitalWrite(BackLeftMotorPin1,LOW);
     digitalWrite(BackLeftMotorPin2,LOW);   
-  }
-  if (motorNumber = BACK_RIGHT_MOTOR)
-  {
+    }
     ledcWrite(PWMSpeedChannel_1, abs(motorSpeed));
-  }
-  else if (motorNumber = BACK_LEFT_MOTOR)
-  {
     ledcWrite(PWMSpeedChannel_2, abs(motorSpeed));
-  }
-  else if (motorNumber = FRONT_RIGHT_MOTOR)
-  {
     ledcWrite(PWMSpeedChannel_3, abs(motorSpeed));
-  }
-  else if (motorNumber = FRONT_LEFT_MOTOR)
-  {
     ledcWrite(PWMSpeedChannel_4, abs(motorSpeed));
-  }
 }
 
 void setUpPinModes()
